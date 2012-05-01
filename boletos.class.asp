@@ -110,7 +110,9 @@ Class BoletoASP
 	
 	Private Sub Class_Terminate()
 		Set i_banco = Nothing
+		Set i_sacado = Nothing
 	End Sub
+	
 	
 	' ## Metodos ##
 	Public Function Mod10(ByVal strNumero)
@@ -171,6 +173,9 @@ Class BoletoASP
 			
 		ElseIf tipo = MOD11_BB Then
 			If DV = 10 Then DV = "X"
+			
+		Else
+			If DV = 10 Then DV = 0
 		End If
 		
 		Mod11 = DV
