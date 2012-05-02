@@ -2,100 +2,100 @@
 <head>
 <title></title>
 <style type="text/css">
-td.BoletoCodigoBanco {
-	font-size: 6mm;
+.Boleto td.BoletoCodigoBanco {
+	font-size: 24px;
 	font-family: arial, verdana;
 	font-weight : bold;
 	font-style: italic;
 	text-align: center;
 	vertical-align: bottom;
-	border-bottom: 0.15mm solid #000000;
-	border-right: 0.15mm solid #000000;
-	padding-bottom : 1mm
+	border-bottom: 1px solid #000000;
+	border-right: 1px solid #000000;
+	padding-bottom : 4px
 }
-td.BoletoLogo {
-	border-bottom: 0.15mm solid #000000;
-	border-right: 0.15mm solid #000000;
+.Boleto td.BoletoLogo {
+	border-bottom: 1px solid #000000;
+	border-right: 1px solid #000000;
 	text-align: center;
 	height: 10mm
 }
-td.BoletoLinhaDigitavel {
-	font-size: 4 mm;
+.Boleto td.BoletoLinhaDigitavel {
+	font-size: 15px;
 	font-family: arial, verdana;
 	font-weight : bold;
 	text-align: center;
 	vertical-align: bottom;
-	border-bottom: 0.15mm solid #000000;
-	padding-bottom : 1mm;
+	border-bottom: 1px solid #000000;
+	padding-bottom : 4px;
 }
-td.BoletoTituloEsquerdo {
-	font-size: 0.2cm;
+.Boleto td.BoletoTituloEsquerdo {
+	font-size: 9px;
 	font-family: arial, verdana;
-	padding-left : 0.15mm;
-	border-right: 0.15mm solid #000000;
+	padding-left : 1px;
+	border-right: 1px solid #000000;
 	text-align: left
 }
-td.BoletoTituloDireito {
-	font-size: 2mm;
+.Boleto td.BoletoTituloDireito {
+	font-size: 9px;
 	font-family: arial, verdana;
-	padding-left : 0.15mm;
+	padding-left : 1px;
 	text-align: left
 }
-td.BoletoValorEsquerdo {
-	font-size: 3mm;
+.Boleto td.BoletoValorEsquerdo {
+	font-size: 10px;
 	font-family: arial, verdana;
 	text-align: center;
-	border-right: 0.15mm solid #000000;
+	border-right: 1px solid #000000;
 	font-weight: bold;
-	border-bottom: 0.15mm solid #000000;
-	padding-top: 0.5mm
+	border-bottom: 1px solid #000000;
+	padding-top: 2px
 }
-td.BoletoValorDireito {
-	font-size: 3mm;
+.Boleto td.BoletoValorDireito {
+	font-size: 10px;
 	font-family: arial, verdana;
 	text-align:right;
-	padding-right: 3mm;
-	padding-top: 0.8mm;
-	border-bottom: 0.15mm solid #000000;
+	padding-right: 9px;
+	padding-top: 2px;
+	border-bottom: 1px solid #000000;
 	font-weight: bold;
 }
-td.BoletoTituloSacado {
-	font-size: 2mm;
+.Boleto td.BoletoTituloSacado {
+	font-size: 8px;
 	font-family: arial, verdana;
-	padding-left : 0.15mm;
+	padding-left : 1px;
 	vertical-align: top;
-	padding-top : 0.15mm;
+	padding-top : 1px;
 	text-align: left
 }
-td.BoletoValorSacado {
-	font-size: 3mm;
+.Boleto td.BoletoValorSacado {
+	font-size: 9px;
 	font-family: arial, verdana;
 	font-weight: bold;
 	text-align : left
 }
-td.BoletoTituloSacador {
-	font-size: 2mm;
+.Boleto td.BoletoTituloSacador {
+	font-size: 8px;
 	font-family: arial, verdana;
-	padding-left : 0.15mm;
+	padding-left : 1px;
 	vertical-align: bottom;
-	padding-bottom : 0.8mm;
-	border-bottom: 0.15mm solid #000000
+	padding-bottom : 2px;
+	border-bottom: 1px solid #000000
 }
-td.BoletoValorSacador {
-	font-size: 3mm;
+.Boleto td.BoletoValorSacador {
+	font-size: 9px;
 	font-family: arial, verdana;
 	vertical-align: bottom;
-	padding-bottom : 0.15mm;
-	border-bottom: 0.15mm solid #000000;
+	padding-bottom : 1px;
+	border-bottom: 1px solid #000000;
 	font-weight: bold;
 	text-align: left
 }
-td.BoletoPontilhado {
-	border-top: 0.3mm dashed #000000;
-	font-size: 1mm
+.Boleto td.BoletoPontilhado {
+	border-top: 1px dashed #000000;
+	font-size: 4px
 }
-ul.BoletoInstrucoes {
-	font-size : 3mm;
+.Boleto ul.BoletoInstrucoes {
+	font-size : 9px;
 	font-family : verdana, arial
 }
 </style>
@@ -127,25 +127,25 @@ ul.BoletoInstrucoes {
 		<td colspan="11" class="BoletoPontilhado">&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="4" class="BoletoLogo"><img src="imagens/<%= bancoNumero %>.jpg"></td>
-		<td colspan="2" class="BoletoCodigoBanco"><%= bancoNumero %>-<%= bancoDigito %></td>
-		<td colspan="6" class="BoletoLinhaDigitavel"><%= linhaDigitavel %></td>
+		<td colspan="4" class="BoletoLogo"><img src="imagens/<%= boleto.Banco.Numero %>.jpg"></td>
+		<td colspan="2" class="BoletoCodigoBanco"><%= boleto.Banco.Numero %>-<%= boleto.Mod11(boleto.Banco.Numero, "") %></td>
+		<td colspan="6" class="BoletoLinhaDigitavel"><%= boleto.LinhaDigitavel() %></td>
 	</tr>
 	<tr>
 		<td colspan="10" class="BoletoTituloEsquerdo">Local de Pagamento</td>
 		<td class="BoletoTituloDireito">Vencimento</td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= LocalDePagamento %></td>
-		<td class="BoletoValorDireito"><%= dataVencimento %></td>
+		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= boleto.Banco.LocalPagamento %></td>
+		<td class="BoletoValorDireito"><%= boleto.DataVencimento %></td>
 	</tr>
 	<tr>
 		<td colspan="10" class="BoletoTituloEsquerdo">Cedente</td>
 		<td class="BoletoTituloDireito">Agência/Código do Cedente</td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= cedenteNome %></td>
-		<td class="BoletoValorDireito"><%= bancoAgencia %>/<%= cedenteCodigo %></td>
+		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= boleto.CedenteNome %></td>
+		<td class="BoletoValorDireito"><%= boleto.Banco.Agencia %>/<%= boleto.Banco.Conta %>-<%= boleto.Banco.ContaDV %></td>
 	</tr>
 	<tr>
 		<td colspan="3" class="BoletoTituloEsquerdo">Data do Documento</td>
@@ -156,12 +156,12 @@ ul.BoletoInstrucoes {
 		<td class="BoletoTituloDireito">Nosso Número</td>
 	</tr>
 	<tr>
-		<td colspan="3" class="BoletoValorEsquerdo"><%= DataDocumento %></td>
-		<td colspan="4" class="BoletoValorEsquerdo"><%= NumeroDocumento %></td>
-		<td class="BoletoValorEsquerdo"><%= especie %></td>
-		<td class="BoletoValorEsquerdo"><%= aceite %></td>
-		<td class="BoletoValorEsquerdo"><%= DataProcessamento %></td>
-		<td class="BoletoValorDireito"><%= NossoNumero %></td>
+		<td colspan="3" class="BoletoValorEsquerdo"><%= boleto.DataDocumento %></td>
+		<td colspan="4" class="BoletoValorEsquerdo"><%= boleto.NumeroDocumento %></td>
+		<td class="BoletoValorEsquerdo"><%= boleto.Especie %></td>
+		<td class="BoletoValorEsquerdo"><%= boleto.Aceite %></td>
+		<td class="BoletoValorEsquerdo"><%= boleto.DataProcessamento %></td>
+		<td class="BoletoValorDireito"><%= boleto.NossoNumero %>-<%= boleto.NossoNumeroDV %></td>
 	</tr>
 	<tr>
 		<td colspan="3" class="BoletoTituloEsquerdo">Uso do Banco</td>
@@ -173,18 +173,18 @@ ul.BoletoInstrucoes {
 	</tr>
 	<tr>
 		<td colspan="3" class="BoletoValorEsquerdo">&nbsp;</td>
-		<td colspan="2" class="BoletoValorEsquerdo"><%= bancoCarteira %></td>
+		<td colspan="2" class="BoletoValorEsquerdo"><%= boleto.Banco.Carteira %></td>
 		<td colspan="2" class="BoletoValorEsquerdo">R$</td>
 		<td colspan="2" class="BoletoValorEsquerdo">&nbsp;</td>
 		<td class="BoletoValorEsquerdo">&nbsp;</td>
-		<td class="BoletoValorDireito"><%= ValorDocumento %></td>
+		<td class="BoletoValorDireito"><%= boleto.ValorDocumento %></td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoTituloEsquerdo">Instruco</td>
+		<td colspan="10" class="BoletoTituloEsquerdo">Instruções</td>
 		<td class="BoletoTituloDireito">(-) Desconto</td>
 	</tr>
 	<tr>
-		<td colspan="10" rowspan="9" class="BoletoValorEsquerdo" style="text-align: left; vertical-align:top; padding-left : 0.1cm"><%= Instrucoes %></td>
+		<td colspan="10" rowspan="9" class="BoletoValorEsquerdo" style="text-align: left; vertical-align:top; padding-left : 0.1cm"><%= boleto.Instrucoes %>&nbsp;</td>
 		<td class="BoletoValorDireito">&nbsp;</td>
 	</tr>
 	<tr>
@@ -213,18 +213,18 @@ ul.BoletoInstrucoes {
 	</tr>
 	<tr>
 		<td rowspan="3" class="BoletoTituloSacado">Sacado:</td>
-		<td colspan="8" class="BoletoValorSacado"><%= sacadoNome %></td>
-		<td colspan="2" class="BoletoValorSacado"><%= sacadoCPF %></td>
+		<td colspan="8" class="BoletoValorSacado"><%= boleto.Sacado.Nome %></td>
+		<td colspan="2" class="BoletoValorSacado"><%= boleto.Sacado.CPF %></td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoValorSacado"><%= sacadoEndereco %> - <%= sacadoBairro %></td>
+		<td colspan="10" class="BoletoValorSacado"><%= boleto.Sacado.Endereco %> - <%= boleto.Sacado.Bairro %></td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoValorSacado"><%= sacadoCidade %> - <%= sacadoEstado %>&nbsp;&nbsp;&nbsp;<%= sacadoCEP %></td>
+		<td colspan="10" class="BoletoValorSacado"><%= boleto.Sacado.Cidade %> - <%= boleto.Sacado.Estado %>&nbsp;&nbsp;&nbsp;<%= boleto.Sacado.CEP %></td>
 	</tr>
 	<tr>
 		<td colspan="2" class="BoletoTituloSacador">Sacador / Avalista:</td>
-		<td colspan="9" class="BoletoValorSacador"><%= sacadorNome %></td>
+		<td colspan="9" class="BoletoValorSacador"><%= boleto.SacadorNome %></td>
 	</tr>
 	<tr>
 		<td colspan="11" class="BoletoTituloDireito" style="text-align: right; padding-right: 0.1cm">Recibo do Sacado - Autenticação Mecânica</td>
@@ -236,25 +236,25 @@ ul.BoletoInstrucoes {
 		<td colspan="11" class="BoletoPontilhado">&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="4" class="BoletoLogo"><img src="imagens/<%= bancoNumero %>.jpg"></td>
-		<td colspan="2" class="BoletoCodigoBanco"><%= bancoNumero %>-<%= bancoDV %></td>
-		<td colspan="6" class="BoletoLinhaDigitavel"><%= linhaDigitavel %></td>
+		<td colspan="4" class="BoletoLogo"><img src="imagens/<%= boleto.Banco.Numero %>.jpg"></td>
+		<td colspan="2" class="BoletoCodigoBanco"><%= boleto.Banco.Numero %>-<%= boleto.Mod11(boleto.Banco.Numero, "") %></td>
+		<td colspan="6" class="BoletoLinhaDigitavel"><%= boleto.LinhaDigitavel() %></td>
 	</tr>
 	<tr>
 		<td colspan="10" class="BoletoTituloEsquerdo">Local de Pagamento</td>
 		<td class="BoletoTituloDireito">Vencimento</td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= localDePagamento %></td>
-		<td class="BoletoValorDireito"><%= dataVencimento %></td>
+		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= boleto.Banco.LocalPagamento %></td>
+		<td class="BoletoValorDireito"><%= boleto.dataVencimento %></td>
 	</tr>
 	<tr>
 		<td colspan="10" class="BoletoTituloEsquerdo">Cedente</td>
 		<td class="BoletoTituloDireito">Agência/Código do Cedente</td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= cedenteNome %></td>
-		<td class="BoletoValorDireito"><%= bancoAgencia %>/<%= cedenteCodigo %></td>
+		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= boleto.CedenteNome %></td>
+		<td class="BoletoValorDireito"><%= boleto.Banco.Agencia %>/<%= boleto.Banco.Conta %>-<%= boleto.Banco.ContaDV %></td>
 	</tr>
 	<tr>
 		<td colspan="3" class="BoletoTituloEsquerdo">Data do Documento</td>
@@ -265,12 +265,12 @@ ul.BoletoInstrucoes {
 		<td class="BoletoTituloDireito">Nosso Número</td>
 	</tr>
 	<tr>
-		<td colspan="3" class="BoletoValorEsquerdo"><%= dataDocumento %></td>
-		<td colspan="4" class="BoletoValorEsquerdo"><%= numeroDocumento %></td>
-		<td class="BoletoValorEsquerdo"><%= especie %></td>
-		<td class="BoletoValorEsquerdo"><%= aceite %></td>
-		<td class="BoletoValorEsquerdo"><%= dataProcessamento %></td>
-		<td class="BoletoValorDireito"><%= NossoNumero %></td>
+		<td colspan="3" class="BoletoValorEsquerdo"><%= boleto.DataDocumento %></td>
+		<td colspan="4" class="BoletoValorEsquerdo"><%= boleto.NumeroDocumento %></td>
+		<td class="BoletoValorEsquerdo"><%= boleto.Especie %></td>
+		<td class="BoletoValorEsquerdo"><%= boleto.Aceite %></td>
+		<td class="BoletoValorEsquerdo"><%= boleto.DataProcessamento %></td>
+		<td class="BoletoValorDireito"><%= boleto.NossoNumero %>-<%= boleto.NossoNumeroDV %></td>
 	</tr>
 	<tr>
 		<td colspan="3" class="BoletoTituloEsquerdo">Uso do Banco</td>
@@ -282,24 +282,19 @@ ul.BoletoInstrucoes {
 	</tr>
 	<tr>
 		<td colspan="3" class="BoletoValorEsquerdo">&nbsp;</td>
-		<td colspan="2" class="BoletoValorEsquerdo"><%= bancoCarteira %></td>
+		<td colspan="2" class="BoletoValorEsquerdo"><%= boleto.Banco.Carteira %></td>
 		<td colspan="2" class="BoletoValorEsquerdo">R$</td>
 		<td colspan="2" class="BoletoValorEsquerdo">&nbsp;</td>
 		<td class="BoletoValorEsquerdo">&nbsp;</td>
-		<td class="BoletoValorDireito"><%= valorDocumento %></td>
+		<td class="BoletoValorDireito"><%= formatNumber(boleto.ValorDocumento, 2) %></td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoTituloEsquerdo">Instruções (TODAS AS INFORMAÇÕES DESTE BLOQUETO SÃO DE EXCLUSIVA RESPONSABILIDADE DO CEDENTE)</td>
+		<td colspan="10" class="BoletoTituloEsquerdo">Instruções</td>
 		<td class="BoletoTituloDireito">(-) Desconto</td>
 	</tr>
 	<tr>
 		<td colspan="10" rowspan="9" class="BoletoValorEsquerdo" style="text-align: left; vertical-align:top; padding-left : 0.1cm">
-			<p>
-				<% if percJuros > 0 then %>Após o vencimento, cobrar R$ <%= valorJuros %> por dia de atraso.<br><% end if %>
-				<% if percMulta > 0 then %>Após <%= dateAdd("d", 3, dataVencimento) %> cobrar multa de R$ <%= valorMulta %>.<br><% end if %>
-				<% if percDesconto > 0 then %>Até <%= dataDesconto %> conceder desconto de R$ <%= valorDesconto %>.<br><% end if %>
-				<%= instrucoes %>
-			</p>
+			<%= boleto.Instrucoes %>&nbsp;
 		</td>
 		<td class="BoletoValorDireito">&nbsp;</td>
 	</tr>
@@ -329,24 +324,24 @@ ul.BoletoInstrucoes {
 	</tr>
 	<tr>
 		<td rowspan="3" class="BoletoTituloSacado">Sacado:</td>
-		<td colspan="8" class="BoletoValorSacado"><%= sacadoNome %></td>
-		<td colspan="2" class="BoletoValorSacado"><%= sacadoCPF %></td>
+		<td colspan="8" class="BoletoValorSacado"><%= boleto.Sacado.Nome %>&nbsp;</td>
+		<td colspan="2" class="BoletoValorSacado"><%= boleto.Sacado.CPF %>&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoValorSacado"><%= sacadoEndereco %> - <%= sacadoBairro %></td>
+		<td colspan="10" class="BoletoValorSacado"><%= boleto.Sacado.Endereco %> - <%= boleto.Sacado.Bairro %></td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoValorSacado"><%= sacadoCidade %> - <%= sacadoEstado %>&nbsp;&nbsp;&nbsp;<%= sacadoCEP %></td>
+		<td colspan="10" class="BoletoValorSacado"><%= boleto.Sacado.Cidade %> - <%= boleto.Sacado.Estado %>&nbsp;&nbsp;&nbsp;<%= boleto.Sacado.CEP %></td>
 	</tr>
 	<tr>
 		<td colspan="2" class="BoletoTituloSacador">Sacador / Avalista:</td>
-		<td colspan="9" class="BoletoValorSacador"><%= sacadorNome %></td>
+		<td colspan="9" class="BoletoValorSacador"><%= boleto.SacadorNome %>&nbsp;</td>
 	</tr>
 	<tr>
 		<td colspan="11" class="BoletoTituloDireito" style="text-align: right; padding-right: 0.1cm">Ficha de Compensação - Autenticação Mecânica</td>
 	</tr>
 	<tr>
-		<td colspan="11" height="60" valign="top"><%= codigoBarras %></td>
+		<td colspan="11" height="60" valign="top"><%= boleto.CodigoBarras() %>&nbsp;</td>
 	</tr>
 	<tr>
 		<td colspan="11" class="BoletoPontilhado">&nbsp;</td>
