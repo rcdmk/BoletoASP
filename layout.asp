@@ -1,6 +1,7 @@
-<html>
-<head>
-<title></title>
+<%
+Dim boleto
+Set boleto = Session("BoletoASP")
+%>
 <style type="text/css">
 .Boleto td.BoletoCodigoBanco {
 	font-size: 24px;
@@ -99,8 +100,6 @@
 	font-family : verdana, arial
 }
 </style>
-</head>
-<body>
 <table cellspacing="0" cellpadding="0" border="0" class="Boleto">
 	<tr>
 		<td style="width: 0.9cm"></td>
@@ -347,5 +346,4 @@
 		<td colspan="11" class="BoletoPontilhado">&nbsp;</td>
 	</tr>
 </table>
-</body>
-</html>
+<% Set boleto = Nothing %>

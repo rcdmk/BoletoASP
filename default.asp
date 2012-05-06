@@ -2,13 +2,16 @@
 Option Explicit
 
 ' Importando as classes necessárias
-%><!--#include file="boletos.class.asp" --><%
+%>
+<!--#include file="boletos.class.asp" -->
+<!--#include file="itau.class.asp" -->
+<%
 
 Dim boleto, banco
 
 set boleto = new BoletoASP
 
-boleto.Banco = new BancoItau
+Set boleto.Banco = new BancoItau
 
 boleto.DataDocumento = "28/03/2000"
 boleto.DataProcessamento = ""
