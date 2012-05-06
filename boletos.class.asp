@@ -16,7 +16,7 @@ Const MOD11_BB			= "BB"
 ' ## Classe principal para gerar o boleto ###############################################
 Class BoletoASP
 	' ## Campos ##
-	Dim i_pastaImagens, i_numeroDocumento, i_cedenteNome, i_especie, i_aceite, i_sacadorNome
+	Dim i_pastaImagens, i_layout, i_numeroDocumento, i_cedenteNome, i_especie, i_aceite, i_sacadorNome
 	Dim i_banco, i_nossoNumero, i_nossoNumeroDV, i_sacado, i_moeda, i_dataBase, i_fator
 	Dim i_valorDocumento, i_dataDocumento, i_dataVencimento, i_percMulta, i_percJuros
 	Dim i_dataProcessamento, i_instrucoes
@@ -35,7 +35,16 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get NumeroDocumento
+	Public Property Get Layout()
+		Layout = i_layout
+	End Property
+	
+	Public Property Let Layout(val)
+		i_layout = Replace(val, "\", "/")
+	End Property
+	
+	
+	Public Property Get NumeroDocumento()
 		NumeroDocumento = i_numeroDocumento
 	End Property
 	
@@ -44,7 +53,7 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get CedenteNome
+	Public Property Get CedenteNome()
 		CedenteNome = i_cedenteNome
 	End Property
 	
@@ -53,7 +62,7 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get Especie
+	Public Property Get Especie()
 		Especie = i_especie
 	End Property
 	
@@ -62,7 +71,7 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get Aceite
+	Public Property Get Aceite()
 		Aceite = i_aceite
 	End Property
 	
@@ -71,7 +80,7 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get SacadorNome
+	Public Property Get SacadorNome()
 		SacadorNome = i_sacadorNome
 	End Property
 	
@@ -80,42 +89,53 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get Banco
+	Public Property Get Banco()
 		Set Banco = i_banco
+		Set i_banco.Boleto = Me
 	End Property
 	
-	Public Property Let Banco(val)
+	Public Property Set Banco(val)
 		Set i_banco = val
 	End Property
 	
 	
-	Public Property Get NossoNumero
+	Public Property Get NossoNumero()
 		NossoNumero = i_nossoNumero
 	End Property
 	
 	Public Property Let NossoNumero(val)
 		i_nossoNumero = Completa(val, 8)
-		CalculaNossoNumeroDV
+		calculaNossoNumeroDV
 	End Property
 	
 	
-	Public Property Get NossoNumeroDV
-		CalculaNossoNumeroDV
+	Public Property Get NossoNumeroDV()
+		calculaNossoNumeroDV
 		NossoNumeroDV = i_nossoNumeroDV
 	End Property
 
 	
-	Public Property Get Sacado
+	Public Property Get Sacado()
 		Set Sacado = i_sacado
 	End Property
 	
-	Public Property Let Sacado(val)
+	Public Property Set Sacado(val)
 		Set i_sacado = val
 	End Property
 	
 	
+	Public Property Get Moeda()
+		Moeda = i_moeda
+	End Property
+	
+	
+	Public Property Get Fator()
+		Fator = i_fator
+	End Property
+
+	
 	' Valor do documento
-	Public Property Get ValorDocumento
+	Public Property Get ValorDocumento()
 		ValorDocumento = i_valorDocumento
 	End Property
 	
@@ -124,7 +144,7 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get DataDocumento
+	Public Property Get DataDocumento()
 		DataDocumento = i_dataDocumento
 	End Property
 	
@@ -133,7 +153,7 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get DataProcessamento
+	Public Property Get DataProcessamento()
 		DataProcessamento = i_dataProcessamento
 	End Property
 	
@@ -142,17 +162,17 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get DataVencimento
+	Public Property Get DataVencimento()
 		DataVencimento = i_dataVencimento
 	End Property
 	
 	Public Property Let DataVencimento(val)
 		i_dataVencimento = val
-		CalculaFator
+		calculaFator
 	End Property
 	
 	
-	Public Property Get PercMulta
+	Public Property Get PercMulta()
 		PercMulta = i_percMulta
 	End Property
 	
@@ -161,7 +181,7 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get PercJuros
+	Public Property Get PercJuros()
 		PercJuros = i_percJuros
 	End Property
 	
@@ -170,7 +190,7 @@ Class BoletoASP
 	End Property
 	
 	
-	Public Property Get Instrucoes
+	Public Property Get Instrucoes()
 		Instrucoes = i_instrucoes
 	End Property
 	
@@ -182,6 +202,7 @@ Class BoletoASP
 	' ## Construtor ##
 	Private Sub Class_Initialize()
 		i_pastaImagens = "imagens"
+		i_layout = "layout.asp"
 		i_nossoNumero = "00000000"
 		i_numeroDocumento = "000"
 		i_cedenteNome = "Cedente"
@@ -205,8 +226,8 @@ Class BoletoASP
 		Set i_banco = New BancoASP
 		Set i_sacado = New SacadoASP
 		
-		CalculaFator
-		CalculaNossoNumeroDV
+		calculaFator
+		calculaNossoNumeroDV
 	End Sub
 	
 	Private Sub Class_Terminate()
@@ -270,9 +291,7 @@ Class BoletoASP
 			If tipo <> "" And fator > 9 Then fator = 2
 		Next
 	
-		'DV = (soma * 10) Mod 11
-		DV = soma Mod 11
-		DV = 11 - DV
+		DV = (soma * 10) Mod 11
 		
 		If tipo = MOD11_BARRAS Then
 			If DV = 0 Or DV = 10 Then DV = 1
@@ -296,79 +315,13 @@ Class BoletoASP
 	
 	' Número da linha digitável ou representação numérica
 	Public Function LinhaDigitavel()
-		Dim retorno, i, posicoes(16), numero
-		
-		retorno = ""
-		numero = NumCodigoBarras()
-		
-		posicoes(1)		= Left(numero, 3) 		' Número do banco
-		posicoes(2)		= i_moeda				' Moeda
-		posicoes(3)		= Mid(numero, 20, 3)	' Carteira
-		posicoes(4)		= Mid(numero, 23, 2)	' 2 primeiros dígitos do nosso número
-		posicoes(5)		= "" 					' DV do primeiro grupo
-		
-		posicoes(6)		= Mid(numero, 25, 6)	' Restante do nosso número
-		posicoes(7)		= i_nossoNumeroDV		' Dígito do nosso número
-		posicoes(8)		= Mid(numero, 32, 3)	' 
-		posicoes(9)		= "" ' DV do segundo grupo
-		
-		posicoes(10)	= Mid(numero, 35, 1) 	' Restante da agéncia
-		posicoes(11)	= Mid(numero, 36, 6)	' Conta + DV
-		posicoes(12)	= "000"
-		posicoes(13)	= "" 					' DV do terceiro grupo
-		
-		posicoes(14)	= Mid(numero, 5, 1) 	' DV do código de barras
-		
-		posicoes(15)	= Mid(numero, 6, 4) 	' Fator de vencimento
-		posicoes(16)	= Mid(numero, 10, 10) 	' Valor do documento
-		
-		' Calculando DVs
-		posicoes(5) 	= Mod10(posicoes(1) & posicoes(2) & posicoes(3) & posicoes(4))
-		posicoes(9) 	= Mod10(posicoes(6) & posicoes(7) & posicoes(8))
-		posicoes(13) 	= Mod10(posicoes(10) & posicoes(11) & posicoes(12))
-		
-		For i = 1 To 16
-			retorno = retorno & posicoes(i)
-		Next
-
-		LinhaDigitavel = Left(retorno, 5) & "." & Mid(retorno, 6, 5) & " " & Mid(retorno, 11, 5) & "." & Mid(retorno, 16, 6) & " " & Mid(retorno, 22, 5) & "." & Mid(retorno, 27, 6) & " " & Mid(retorno, 33, 1) & " " & Mid(retorno, 34)
+		LinhaDigitavel = i_banco.LinhaDigitavel
 	End Function
 	
 	
 	' Número do código de barras
 	Public Function NumCodigoBarras()
-		Dim retorno, i, posicoes(43)
-		retorno = ""
-		
-		CalculaNossoNumeroDV
-		
-		posicoes(1) 	= Completa(i_banco.Numero, 3)
-		posicoes(4) 	= i_moeda
-		posicoes(5) 	= "" ' DV do código Mod11
-		
-		' Se o valor for maior que 100 milhões, ignora-se o fator de vencimento
-		If i_valorDocumento >= 100000000 Then
-			posicoes(6)		= Completa(CInt(i_valorDocumento * 100), 14)
-		Else
-			posicoes(6) 	= Completa(i_fator, 4)
-			posicoes(10)	= Completa(CInt(i_valorDocumento * 100), 10)
-		End If
-		
-		posicoes(20) 	= Completa(i_banco.Carteira, 3)
-		posicoes(23) 	= Left(i_nossoNumero, 8)
-		posicoes(31) 	= i_nossoNumeroDV
-		posicoes(32) 	= Completa(i_banco.Agencia, 4)
-		posicoes(36) 	= Completa(i_banco.Conta, 5)
-		posicoes(41) 	= i_banco.ContaDV
-		posicoes(42) 	= "000"
-		
-		For i = 1 To 43
-			retorno = retorno & posicoes(i)
-		Next
-		
-		posicoes(5) = Mod11(retorno, MOD11_BARRAS)
-		
-		NumCodigoBarras = Left(retorno, 4) & posicoes(5) & Right(retorno, 39)
+		NumCodigoBarras = i_banco.NumCodigoBarras()
 	End Function
 	
 	
@@ -434,132 +387,30 @@ Class BoletoASP
 	End Function
 	
 	
+	' Monta e retorna o layout do boleto em HTML
 	Public Function HTML()
-		HTML = "<style type=""text/css"">.Boleto td.BoletoCodigoBanco{font-size: 24px;font-family: arial, verdana;font-weight: bold;font-style: italic;text-align: center;" & vbCrLf _
-			 & "vertical-align: bottom;border-bottom: 1px solid #000000;border-right: 1px solid #000000;padding-bottom : 4px}.Boleto td.BoletoLogo{border-bottom: 1px solid #000000;" & vbCrLf _
-			 & "border-right: 1px solid #000000;text-align: center;height: 10mm}.Boleto td.BoletoLinhaDigitavel{font-size: 15px;font-family: arial, verdana;font-weight : bold;" & vbCrLf _
-			 & "text-align: center;vertical-align: bottom;border-bottom: 1px solid #000000;padding-bottom : 4px;}.Boleto td.BoletoTituloEsquerdo{font-size: 9px;font-family: arial, verdana;" & vbCrLf _
-			 & "padding-left : 1px;border-right: 1px solid #000000;text-align: left}.Boleto td.BoletoTituloDireito{font-size: 9px;font-family: arial, verdana;padding-left : 1px;" & vbCrLf _
-			 & "text-align: left}.Boleto td.BoletoValorEsquerdo{font-size: 10px;font-family: arial, verdana;text-align: center;border-right: 1px solid #000000;font-weight: bold;" & vbCrLf _
-			 & "border-bottom: 1px solid #000000;padding-top: 2px}.Boleto td.BoletoValorDireito{font-size: 10px;font-family: arial, verdana;text-align:right;padding-right: 9px;" & vbCrLf _
-			 & "padding-top: 2px;border-bottom: 1px solid #000000;font-weight: bold;}.Boleto td.BoletoTituloSacado{font-size: 8px;font-family: arial, verdana;padding-left : 1px;" & vbCrLf _
-			 & "vertical-align: top;padding-top : 1px;text-align: left}.Boleto td.BoletoValorSacado{font-size: 9px;font-family: arial, verdana;font-weight: bold;text-align : left}" & vbCrLf _
-			 & ".Boleto td.BoletoTituloSacador{font-size: 8px;font-family: arial, verdana;padding-left : 1px;vertical-align: bottom;padding-bottom : 2px;border-bottom: 1px solid #000000}" & vbCrLf _
-			 & ".Boleto td.BoletoValorSacador{font-size: 9px;font-family: arial, verdana;vertical-align: bottom;padding-bottom : 1px;border-bottom: 1px solid #000000;font-weight: bold;" & vbCrLf _
-			 & "text-align: left}.Boleto td.BoletoPontilhado{border-top: 1px dashed #000000;font-size: 4px}.Boleto ul.BoletoInstrucoes{font-size : 9px;font-family : verdana, arial}</style>" & vbCrLf _
-			 & "<table cellspacing=""0"" cellpadding=""0"" border=""0"" class=""Boleto""><tr><td style=""width: 0.9cm"">&nbsp;</td><td style=""width: 1cm"">&nbsp;</td>" & vbCrLf _
-			 & "<td style=""width: 1.9cm"">&nbsp;</td><td style=""width: 0.5cm"">&nbsp;</td><td style=""width: 1.3cm"">&nbsp;</td><td style=""width: 0.8cm"">&nbsp;</td>" & vbCrLf _
-			 & "<td style=""width: 1cm"">&nbsp;</td><td style=""width: 1.9cm"">&nbsp;</td><td style=""width: 1.9cm"">&nbsp;</td><td style=""width: 3.8cm"">&nbsp;</td>" & vbCrLf _
-			 & "<td style=""width: 3.8cm"">&nbsp;</td></tr><tr><td colspan=""11""><ul class=""BoletoInstrucoes""><li>Imprima em papel A4 ou Carta</li>" & vbCrLf _
-			 & "<li>Utilize margens mínimas a direita e a esquerda</li><li>Recorte na linha pontilhada</li><li>Não rasure o código de barras</li></ul>&nbsp;</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""11"" class=""BoletoPontilhado"">&nbsp;</td></tr><tr><td colspan=""4"" class=""BoletoLogo"">" & vbCrLf _
-			 & "<img src=""imagens/" & boleto.Banco.Numero & ".jpg"">&nbsp;</td>" & vbCrLf _
-			 & "<td colspan=""2"" class=""BoletoCodigoBanco"">" & boleto.Banco.Numero & "-" & boleto.Mod11(boleto.Banco.Numero, "") & "</td>" & vbCrLf _
-			 & "<td colspan=""6"" class=""BoletoLinhaDigitavel"">" & boleto.LinhaDigitavel() & "</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""10"" class=""BoletoTituloEsquerdo"">Local de Pagamento</td>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">Vencimento</td></tr><tr><td colspan=""10"" class=""BoletoValorEsquerdo"" style=""text-align: left;padding-left : 0.1cm"">" & vbCrLf _
-			 & boleto.Banco.LocalPagamento & "</td><td class=""BoletoValorDireito"">" & boleto.DataVencimento & "</td>" & vbCrLf _
-			 & "</tr><tr><td colspan=""10"" class=""BoletoTituloEsquerdo"">Cedente</td><td class=""BoletoTituloDireito"">Agência/Código do Cedente</td></tr>" & vbCrLf _
-			 & "<tr><td colspan=""10"" class=""BoletoValorEsquerdo"" style=""text-align: left;padding-left : 0.1cm"">" & vbCrLf _
-			 & boleto.CedenteNome & "</td><td class=""BoletoValorDireito"">" & boleto.Banco.Agencia & "/" & boleto.Banco.Conta & "-" & boleto.Banco.ContaDV & "</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""3"" class=""BoletoTituloEsquerdo"">Data do Documento</td><td colspan=""4"" class=""BoletoTituloEsquerdo"">Número do Documento</td>" & vbCrLf _
-			 & "<td class=""BoletoTituloEsquerdo"">Espécie</td><td class=""BoletoTituloEsquerdo"">Aceite</td><td class=""BoletoTituloEsquerdo"">Data do Processamento</td>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">Nosso Número</td></tr><tr><td colspan=""3"" class=""BoletoValorEsquerdo"">" & boleto.DataDocumento & "</td>" & vbCrLf _
-			 & "<td colspan=""4"" class=""BoletoValorEsquerdo"">" & boleto.NumeroDocumento & "</td><td class=""BoletoValorEsquerdo"">" & boleto.Especie & "</td>" & vbCrLf _
-			 & "<td class=""BoletoValorEsquerdo"">" & boleto.Aceite & "</td><td class=""BoletoValorEsquerdo"">" & boleto.DataProcessamento & "</td>" & vbCrLf _
-			 & "<td class=""BoletoValorDireito"">" & boleto.NossoNumero & "-" & boleto.NossoNumeroDV & "</td></tr><tr><td colspan=""3"" class=""BoletoTituloEsquerdo"">" & vbCrLf _
-			 & "Uso do Banco</td><td colspan=""2"" class=""BoletoTituloEsquerdo"">Carteira</td><td colspan=""2"" class=""BoletoTituloEsquerdo"">Moeda</td>" & vbCrLf _
-			 & "<td colspan=""2"" class=""BoletoTituloEsquerdo"">Quantidade</td><td class=""BoletoTituloEsquerdo"">(x) Valor</td>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">(=) Valor do Documento</td></tr><tr><td colspan=""3"" class=""BoletoValorEsquerdo"">&nbsp;</td>" & vbCrLf _
-			 & "<td colspan=""2"" class=""BoletoValorEsquerdo"">" & boleto.Banco.Carteira & "</td><td colspan=""2"" class=""BoletoValorEsquerdo"">R$</td>" & vbCrLf _
-			 & "<td colspan=""2"" class=""BoletoValorEsquerdo"">&nbsp;</td><td class=""BoletoValorEsquerdo"">&nbsp;</td>" & vbCrLf _
-			 & "<td class=""BoletoValorDireito"">" & boleto.ValorDocumento & "</td></tr><tr><td colspan=""10"" class=""BoletoTituloEsquerdo"">Instruções</td>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">(-) Desconto</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""10"" rowspan=""9"" class=""BoletoValorEsquerdo"" style=""text-align: left;vertical-align:top;padding-left : 0.1cm"">" & vbCrLf _
-			 & boleto.Instrucoes & "</td>" & vbCrLf _
-			 & "<td class=""BoletoValorDireito"">&nbsp;</td></tr><tr><td class=""BoletoTituloDireito"">(-) Outras Deduções/Abatimento</td>" & vbCrLf _
-			 & "</tr><tr><td class=""BoletoValorDireito"">&nbsp;</td></tr><tr><td class=""BoletoTituloDireito"">(+) Mora/Multa/Juros</td></tr><tr>" & vbCrLf _
-			 & "<td class=""BoletoValorDireito"">&nbsp;</td></tr><tr><td class=""BoletoTituloDireito"">(+) Outros Acréscimos</td></tr>" & vbCrLf _
-			 & "<tr><td class=""BoletoValorDireito"">&nbsp;</td></tr><tr><td class=""BoletoTituloDireito"">(=) Valor Cobrado</td></tr>" & vbCrLf _
-			 & "<tr><td class=""BoletoValorDireito"">&nbsp;</td></tr><tr><td rowspan=""3"" class=""BoletoTituloSacado"">Sacado:</td>" & vbCrLf _
-			 & "<td colspan=""8"" class=""BoletoValorSacado"">" & boleto.Sacado.Nome & "</td>" & vbCrLf _
-			 & "<td colspan=""2"" class=""BoletoValorSacado"">" & boleto.Sacado.CPF & "</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""10"" class=""BoletoValorSacado"">" & boleto.Sacado.Endereco & " - " & boleto.Sacado.Bairro & "</td>" & vbCrLf _
-			 & "</tr><tr><td colspan=""10"" class=""BoletoValorSacado"">" & boleto.Sacado.Cidade & "- " & boleto.Sacado.Estado & "" & boleto.Sacado.CEP & "</td>" & vbCrLf _
-			 & "</tr><tr><td colspan=""2"" class=""BoletoTituloSacador"">Sacador / Avalista:</td>" & vbCrLf _
-			 & "<td colspan=""9"" class=""BoletoValorSacador"">" & boleto.SacadorNome & "</td></tr>" & vbCrLf _
-			 & "<tr><td colspan=""11"" class=""BoletoTituloDireito"" style=""text-align: right;padding-right: 0.1cm"">Recibo do Sacado - Autenticação Mecânica</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""11"" height=""60"" valign=""top"">&nbsp;</td></tr><tr><td colspan=""11"" class=""BoletoPontilhado"">&nbsp;</td>" & vbCrLf _
-			 & "</tr><tr><td colspan=""4"" class=""BoletoLogo""><img src=""imagens/" & boleto.Banco.Numero & ".jpg"">&nbsp;</td>" & vbCrLf _
-			 & "<td colspan=""2"" class=""BoletoCodigoBanco"">" & boleto.Banco.Numero & "-" & boleto.Mod11(boleto.Banco.Numero, "") & "</td>" & vbCrLf _
-			 & "<td colspan=""6"" class=""BoletoLinhaDigitavel"">" & boleto.LinhaDigitavel() & "</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""10"" class=""BoletoTituloEsquerdo"">Local de Pagamento</td><td class=""BoletoTituloDireito"">Vencimento</td></tr>" & vbCrLf _
-			 & "<tr><td colspan=""10"" class=""BoletoValorEsquerdo"" style=""text-align: left;padding-left : 0.1cm"">" & vbCrLf _
-			 & boleto.Banco.LocalPagamento & "</td><td class=""BoletoValorDireito"">" & boleto.dataVencimento & "</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""10"" class=""BoletoTituloEsquerdo"">Cedente</td><td class=""BoletoTituloDireito"">Agência/Código do Cedente</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""10"" class=""BoletoValorEsquerdo"" style=""text-align: left;padding-left : 0.1cm"">" & boleto.CedenteNome & "</td>" & vbCrLf _
-			 & "<td class=""BoletoValorDireito"">" & boleto.Banco.Agencia & "/" & boleto.Banco.Conta & "-" & boleto.Banco.ContaDV & "</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""3"" class=""BoletoTituloEsquerdo"">Data do Documento</td><td colspan=""4"" class=""BoletoTituloEsquerdo"">Número do Documento</td>" & vbCrLf _
-			 & "<td class=""BoletoTituloEsquerdo"">Espécie</td><td class=""BoletoTituloEsquerdo"">Aceite</td><td class=""BoletoTituloEsquerdo"">Data do Processamento</td>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">Nosso Número</td></tr><tr><td colspan=""3"" class=""BoletoValorEsquerdo"">" & boleto.DataDocumento & "</td>" & vbCrLf _
-			 & "<td colspan=""4"" class=""BoletoValorEsquerdo"">" & boleto.NumeroDocumento & "</td><td class=""BoletoValorEsquerdo"">" & boleto.Especie & "</td>" & vbCrLf _
-			 & "<td class=""BoletoValorEsquerdo"">" & boleto.Aceite & "</td><td class=""BoletoValorEsquerdo"">" & boleto.DataProcessamento & "</td>" & vbCrLf _
-			 & "<td class=""BoletoValorDireito"">" & boleto.NossoNumero & "-" & boleto.NossoNumeroDV & "</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""3"" class=""BoletoTituloEsquerdo"">Uso do Banco</td><td colspan=""2"" class=""BoletoTituloEsquerdo"">Carteira</td>" & vbCrLf _
-			 & "<td colspan=""2"" class=""BoletoTituloEsquerdo"">Moeda</td><td colspan=""2"" class=""BoletoTituloEsquerdo"">Quantidade</td>" & vbCrLf _
-			 & "<td class=""BoletoTituloEsquerdo"">(x) Valor</td><td class=""BoletoTituloDireito"">(=) Valor do Documento</td>" & vbCrLf _
-			 & "</tr><tr><td colspan=""3"" class=""BoletoValorEsquerdo"">&nbsp;</td><td colspan=""2"" class=""BoletoValorEsquerdo"">" & boleto.Banco.Carteira & "</td>" & vbCrLf _
-			 & "<td colspan=""2"" class=""BoletoValorEsquerdo"">R$</td><td colspan=""2"" class=""BoletoValorEsquerdo"">&nbsp;</td><td class=""BoletoValorEsquerdo"">&nbsp;</td>" & vbCrLf _
-			 & "<td class=""BoletoValorDireito"">" & formatNumber(boleto.ValorDocumento, 2) & "</td></tr><tr><td colspan=""10"" class=""BoletoTituloEsquerdo"">Instruções</td>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">(-) Desconto</td></tr><tr><td colspan=""10"" rowspan=""9"" class=""BoletoValorEsquerdo"" style=""text-align: left;" & vbCrLf _
-			 & "vertical-align:top;padding-left : 0.1cm"">" & boleto.Instrucoes & "</td><td class=""BoletoValorDireito"">&nbsp;</td></tr><tr>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">(-) Outras Deduções/Abatimento</td></tr><tr><td class=""BoletoValorDireito"">&nbsp;</td></tr><tr>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">(+) Mora/Multa/Juros</td></tr><tr><td class=""BoletoValorDireito"">&nbsp;</td></tr><tr>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">(+) Outros Acréscimos</td></tr><tr><td class=""BoletoValorDireito"">&nbsp;</td></tr><tr>" & vbCrLf _
-			 & "<td class=""BoletoTituloDireito"">(=) Valor Cobrado</td></tr><tr><td class=""BoletoValorDireito"">&nbsp;</td></tr><tr>" & vbCrLf _
-			 & "<td rowspan=""3"" class=""BoletoTituloSacado"">Sacado:</td><td colspan=""8"" class=""BoletoValorSacado"">" & boleto.Sacado.Nome & "</td>" & vbCrLf _
-			 & "<td colspan=""2"" class=""BoletoValorSacado"">" & boleto.Sacado.CPF & "</td></tr><tr>" & vbCrLf _
-			 & "<td colspan=""10"" class=""BoletoValorSacado"">" & boleto.Sacado.Endereco & "- " & boleto.Sacado.Bairro & "</td>" & vbCrLf _
-			 & "</tr><tr><td colspan=""10"" class=""BoletoValorSacado"">" & boleto.Sacado.Cidade & "- " & boleto.Sacado.Estado & "" & boleto.Sacado.CEP & "</td>" & vbCrLf _
-			 & "</tr><tr><td colspan=""2"" class=""BoletoTituloSacador"">Sacador / Avalista:</td><td colspan=""9"" class=""BoletoValorSacador"">" & boleto.SacadorNome & "</td>" & vbCrLf _
-			 & "</tr><tr><td colspan=""11"" class=""BoletoTituloDireito"" style=""text-align: right;padding-right: 0.1cm"">Ficha de Compensação - Autenticação Mecânica</td></tr>" & vbCrLf _
-			 & "<tr><td colspan=""11"" height=""60"" valign=""top"">" & boleto.CodigoBarras() & "</td></tr>" & vbCrLf _
-			 & "<tr><td colspan=""11"" class=""BoletoPontilhado"">&nbsp;</td></tr></table>"
+		Dim erro, fso
+		Set fso = Server.CreateObject("Scripting.FileSystemObject")
+		erro = Not fso.FileExists(Server.MapPath(i_layout))
+		Set fso = Nothing
+		
+		If erro then
+			Err.Raise 17, "Caminho inválido", "O arquivo de layout informado não existe."
+		Else		
+			Set Session("BoletoASP") = Me
+			HTML = Server.Execute(i_layout)
+		End If
 	End Function
 	
 	
+	' Escreve o HTML do boleto direto na página
 	Public Function Write()
 		Response.Write HTML()
 	End Function
 	
 	
-	' ## Métodos privados ##
-	' Fator do vencimento
-	Private Function CalculaFator()
-		i_fator = DateDiff("d", i_dataBase, i_dataVencimento)
-	End Function
-	
-	
-	' DV do nosso número
-	Private Function CalculaNossoNumeroDV()
-		Dim retorno, posicoes(4), i
-		retorno = ""
-		
-		posicoes(1) = Completa(i_banco.Agencia, 4)
-		posicoes(2) = Completa(i_banco.Conta, 5)
-		posicoes(3) = Completa(i_banco.Carteira, 3)
-		posicoes(4) = Left(i_nossoNumero, 8)
-		
-		For i = 1 To 4
-			retorno = retorno & posicoes(i)
-		Next
-		
-		i_nossoNumeroDV = Mod10(retorno)
-	End Function
-	
-	
 	' Auxiliar para completar numeros com zeros a esquerda
-	Private Function Completa(ByVal numero, ByVal casas)
+	Public Function Completa(ByVal numero, ByVal casas)
 		Dim retorno
 		retorno = CStr(numero)
 		
@@ -572,7 +423,7 @@ Class BoletoASP
 	
 	
 	' Auxiliar para formatar datas para 10 caracteres DD/MM/AAAA
-	Private Function FormataData(ByVal data)
+	Public Function FormataData(ByVal data)
 		Dim retorno
 		retorno = data
 		
@@ -582,7 +433,7 @@ Class BoletoASP
 	End Function
 	
 	' Auxiliar para limpar datas para os códigos DDMMAA
-	Private Function LimpaData(ByVal data)
+	Public Function LimpaData(ByVal data)
 		Dim retorno
 		retorno = ""
 		
@@ -590,16 +441,222 @@ Class BoletoASP
 		
 		LimpaData = retorno
 	End Function
+	
+	
+	' ## Métodos privados ##
+	' Fator do vencimento
+	Private Function calculaFator()
+		i_fator = DateDiff("d", i_dataBase, i_dataVencimento)
+	End Function
+	
+	
+	' DV do nosso número
+	Private Function calculaNossoNumeroDV()
+		i_nossoNumeroDV = i_banco.CalculaNossoNumeroDV()
+		calculaNossoNumeroDV = i_nossoNumeroDV
+	End Function
+End Class
+
+
+' ## Classes base de código para interfaces #############################################
+Class Interface
+	' ## Campos ##
+	Dim i_implementacao, i_obrigatorios
+	
+	
+	' ## Propriedades ##
+	Public Property Get Implementacao()
+		Set Implementacao = i_implementacao
+	End Property
+	
+	Public Property Set Implementacao(val)
+		Set i_implementacao = val
+	End Property
+	
+	
+	Public Property Get Obrigatorios()
+		Obrigatorios = i_obrigatorios
+	End Property
+	
+	Public Property Let Obrigatorios(val)
+		i_obrigatorios = val
+	End Property
+	
+	
+	' ## Construtor ##
+	Private Sub Class_Initialize()
+		i_obrigatorios = Array()
+	End Sub
+	
+	Private Sub Class_Terminate()
+		Set i_implementacao = Nothing
+	End Sub
+	
+	
+	' ## Métodos ##
+	Public Function Verifica()
+		Dim prop, check, i, resultado
+		resultado = true
+		
+		'On Error Resume Next
+		
+		For i = 0 To UBound(i_obrigatorios)
+			prop = i_obrigatorios(i)
+			check = TypeName(Eval("i_implementacao." & prop))
+			
+			If Err.number <> 0 and Err.number <> 5 and Err.number <> 450 Then
+				resultado = false
+				Err.Clear()
+				Exit For
+			End If
+		Next
+		
+		'On Error GoTo 0
+		
+		Verifica = resultado
+		
+		If Not resultado Then
+			'Err.Raise 17, "Implementação de Interface", "A Interface não foi corretamente implementada. Falta a implementação de " & prop & " em " & TypeName(i_implementacao) & "."
+		End If
+	End Function
 End Class
 
 
 ' ## Classe base para os bancos #########################################################
-Class BancoASP
+Class IBancoASP 'extends Interface
 	' ## Campos ##
+	Dim i_pai
+
+
+	' ## Interface ##
+	Public Property Get Pai()
+		Set Pai = i_pai
+	End Property
+	
+	Public Property Set Pai(val)
+		Set i_pai = val
+	End Property
+	
+	
+	Public Property Get Implementacao()
+		Set Implementacao = i_pai.Implementacao
+	End Property
+	
+	Public Property Set Implementacao(val)
+		Set i_pai.Implementacao = val
+	End Property
+	
+	
+	Public Property Get Obrigatorios()
+		Obrigatorios = i_pai.Obrigatorios
+	End Property
+	
+	
+	Public Property Get Verifica()
+		Verifica = i_pai.Verifica()
+	End Property
+	
+	
+	' ## Propriedades ##
+	Public Property Get Boleto()
+	End Property
+	
+	Public Property Set Boleto(val)
+	End Property
+	
+	
+	Public Property Get Numero()
+	End Property
+	
+	Public Property Let Numero(val)
+	End Property
+
+	
+	Public Property Get Nome()
+	End Property
+	
+	Public Property Let Nome(val)
+	End Property
+	
+	
+	Public Property Get Carteira()
+	End Property
+	
+	Public Property Let Carteira(val)
+	End Property
+	
+	
+	Public Property Get Agencia()
+	End Property
+	
+	Public Property Let Agencia(val)
+	End Property
+	
+	
+	Public Property Get Conta()
+	End Property
+	
+	Public Property Let Conta(val)
+	End Property
+	
+	
+	Public Property Get ContaDV()
+	End Property
+	
+	Public Property Let ContaDV(valor)
+	End Property
+	
+	
+	Public Property Get LocalPagamento()
+	End Property
+	
+	Public Property Let LocalPagamento(val)
+	End Property
+	
+	
+	' ## Construtor ##
+	Private Sub Class_Initialize()
+		Set i_pai = New Interface
+		i_pai.Obrigatorios = Array("Boleto", "Numero", "Nome", "Carteira", "Agencia", "Conta", "ContaDV", "LocalPagamento", "CalculaNossoNumeroDV", "NumCodigoBarras", "LinhaDigitavel")
+	End Sub
+	
+	Private Sub Class_Terminate()
+		Set i_pai = Nothing
+	End Sub
+	
+	
+	' ## Métodos ##
+	Public Function CalculaNossoNumeroDV()
+	End Function
+	
+	Public Function NumCodigoBarras()
+	End Function
+	
+	Public Function LinhaDigitavel()
+	End Function
+End Class
+
+
+' ## Implementação básica ##
+Class BancoASP 'implements IBancoASP
+	' ## Campos ##
+	Dim i_pai, i_boleto
 	Dim i_numero, i_nome, i_carteira, i_agencia, i_conta, i_contaDV
 	Dim i_localPagamento
 	
+	
 	' ## Propriedades ##
+	Public Interface
+	
+	Public Property Get Boleto()
+		Set Boleto = i_boleto
+	End Property
+	
+	Public Property Set Boleto(val)
+		Set i_boleto = val
+	End Property
+	
+	
 	Public Property Get Numero()
 		Numero = i_numero
 	End Property
@@ -665,14 +722,45 @@ Class BancoASP
 	
 	' ## Construtor ##
 	Private Sub Class_Initialize()
-		i_numero = ""
-		i_nome = ""
-		i_carteira = ""
-		i_conta = ""
+		Set i_boleto = New BoletoASP
+		
+		Set Interface = New IBancoASP
+		Set Interface.Implementacao = Me
+		Interface.Verifica()
+		
+		i_nome = "Banco"
+		i_Numero = "000"
+		i_carteira = "00"
+		i_conta = "00000"
 		i_contaDV = 0
 		i_localPagamento = ""
 	End Sub
+	
+	Private Sub Class_Terminate()
+		Set Implementacao = Nothing
+		Set i_base = Nothing
+	End Sub
+	
+	
+	' ## Métodos ##
+	Public Function CalculaNossoNumeroDV()
+		CalculaNossoNumeroDV = 0
+	End Function
+	
+	
+	Public Function NumCodigoBarras()
+		NumCodigoBarras = Boleto.Completa("0", 44)
+	End Function
+	
+	
+	Public Function LinhaDigitavel()
+		Dim retorno
+		retorno = Boleto.Completa("0", 44)
+
+		LinhaDigitavel = Left(retorno, 5) & "." & Mid(retorno, 6, 5) & " " & Mid(retorno, 11, 5) & "." & Mid(retorno, 16, 6) & " " & Mid(retorno, 22, 5) & "." & Mid(retorno, 27, 6) & " " & Mid(retorno, 33, 1) & " " & Mid(retorno, 34)
+	End Function
 End Class
+
 
 
 ' ## Classe base para os sacados ########################################################
@@ -754,86 +842,6 @@ Class SacadoASP
 		i_cidade = ""
 		i_estado = ""
 		i_cpf = ""
-	End Sub
-End Class
-
-
-
-' ## Modelo para Banco Itaú ###########################################################
-Class BancoItau
-	' ## Campos ##
-	Dim i_base
-	
-	
-	' ## Propriedades ##
-	Public Property Get Numero()
-		Numero = i_base.Numero
-	End Property
-
-	
-	Public Property Get Nome()
-		Nome = i_base.Nome
-	End Property
-	
-	
-	Public Property Get Carteira()
-		Carteira = i_base.Carteira
-	End Property
-	
-	Public Property Let Carteira(val)
-		i_base.Carteira = val
-	End Property
-	
-	
-	Public Property Get Agencia()
-		Agencia = i_base.Agencia
-	End Property
-	
-	Public Property Let Agencia(val)
-		i_base.Agencia = val
-	End Property
-	
-	
-	Public Property Get Conta()
-		Conta = i_base.Conta
-	End Property
-	
-	Public Property Let Conta(val)
-		i_base.Conta = val
-	End Property
-	
-	
-	Public Property Get ContaDV()
-		ContaDV = i_base.ContaDV
-	End Property
-	
-	Public Property Let ContaDV(val)
-		i_base.ContaDV = val
-	End Property
-	
-	
-	Public Property Get LocalPagamento()
-		LocalPagamento = i_base.LocalPagamento
-	End Property
-	
-	Public Property Let LocalPagamento(val)
-		i_base.LocalPagamento = val
-	End Property
-	
-	
-	Private Sub Class_Initialize()
-		Set i_base = New BancoASP
-		i_base.Nome = "Banco Itaú SA"
-		i_base.Numero = 341
-		i_base.Carteira = 175
-		i_base.Conta = 18128
-		i_base.ContaDV = 0
-		i_base.LocalPagamento = "ATE O VENCIMENTO PAGUE PREFERENCIALMENTE NO ITAU OU BANERJ<br />" & vbCrLf _
-							  & "APOS O VENCIMENTO PAGUE SOMENTE NO ITAU OU BANERJ"
-	End Sub
-	
-	Private Sub Class_Terminate()
-		Set i_base = Nothing
 	End Sub
 End Class
 %>
