@@ -139,10 +139,10 @@ Class BancoItau 'implements IBancoASP
 		
 		' Se o valor for maior que 100 milhões, ignora-se o fator de vencimento
 		If Boleto.ValorDocumento >= 100000000 Then
-			posicoes(6)		= Boleto.Completa(CInt(Boleto.ValorDocumento * 100), 14)
+			posicoes(6)		= Boleto.Completa(CLng(Boleto.ValorDocumento * 100), 14)
 		Else
 			posicoes(6) 	= Boleto.Completa(Boleto.Fator, 4)
-			posicoes(10)	= Boleto.Completa(CInt(Boleto.ValorDocumento * 100), 10)
+			posicoes(10)	= Boleto.Completa(CLng(Boleto.ValorDocumento * 100), 10)
 		End If
 		
 		posicoes(20) 	= Boleto.Completa(Carteira, 3)
@@ -170,13 +170,13 @@ Class BancoItau 'implements IBancoASP
 		numero = NumCodigoBarras()
 		
 		posicoes(1)		= Left(numero, 3) 				' Número do banco
-		posicoes(2)		= Boleto.Moeda			' Moeda
+		posicoes(2)		= Boleto.Moeda					' Moeda
 		posicoes(3)		= Mid(numero, 20, 3)			' Carteira
 		posicoes(4)		= Mid(numero, 23, 2)			' 2 primeiros dígitos do nosso número
 		posicoes(5)		= "" 							' DV do primeiro grupo
 		
 		posicoes(6)		= Mid(numero, 25, 6)			' Restante do nosso número
-		posicoes(7)		= Boleto.NossoNumeroDV	' Dígito do nosso número
+		posicoes(7)		= Boleto.NossoNumeroDV			' Dígito do nosso número
 		posicoes(8)		= Mid(numero, 32, 3)			' 3 Primeiros numeros da agência
 		posicoes(9)		= "" 							' DV do segundo grupo
 		
