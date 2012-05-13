@@ -1,12 +1,12 @@
 <%
 '
-' Esta classe representa os padrões de boleto para o banco Itaú com as
-' carteiras de nosso número com 15 posições
+' Esta classe representa os padrões de boleto para o banco Real com as
+' carteiras padrão
 '
-' ## Modelo para Banco Itaú ##
-Class BancoItau15P 'implements IBancoASP
+' ## Modelo para Banco Real ##
+Class BancoReal 'implements IBancoASP
 	' ## Campos ##
-	Dim i_pai, i_boleto, i_codigoCliente
+	Dim i_pai, i_boleto
 	Dim i_numero, i_nome, i_carteira, i_agencia, i_conta, i_contaDV
 	Dim i_localPagamento
 	
@@ -50,15 +50,6 @@ Class BancoItau15P 'implements IBancoASP
 	End Property
 	
 	
-	Public Property Get CodigoCliente()
-		CodigoCliente = i_codigoCliente
-	End Property
-	
-	Public Property Let CodigoCliente(val)
-		i_codigoCliente = val
-	End Property
-	
-	
 	Public Property Get Agencia()
 		Agencia = i_agencia
 	End Property
@@ -74,15 +65,12 @@ Class BancoItau15P 'implements IBancoASP
 	
 	Public Property Let Conta(val)
 		i_conta = val
+		i_contaDV = CalculaContaDV
 	End Property
 	
 	
 	Public Property Get ContaDV()
 		ContaDV = i_contaDV
-	End Property
-	
-	Public Property Let ContaDV(valor)
-		i_contaDV = valor
 	End Property
 	
 	
@@ -103,13 +91,12 @@ Class BancoItau15P 'implements IBancoASP
 		Set Interface.Implementacao = Me
 		Interface.Verifica()
 		
-		i_nome = "Banco Itaú SA"
-		i_Numero = 341
-		i_carteira = 198
+		i_nome = "Banco Real SA"
+		i_Numero = 356
+		i_carteira = ""
 		i_conta = "00000"
 		i_contaDV = 0
-		i_localPagamento = "ATE O VENCIMENTO PAGUE PREFERENCIALMENTE NO ITAU OU BANERJ<br />" & vbCrLf _
-						 & "APOS O VENCIMENTO PAGUE SOMENTE NO ITAU OU BANERJ"
+		i_localPagamento = "PAGAVEL EM QUALQUER AGENCIA BANCARIA"
 	End Sub
 	
 	Private Sub Class_Terminate()
@@ -119,16 +106,30 @@ Class BancoItau15P 'implements IBancoASP
 	
 	
 	' ## Métodos ##
-	Public Function CalculaNossoNumeroDV()
-		Dim retorno, posicoes(4), i
+	Private Function CalculaContaDV()
+		Dim retorno, posicoes(2), i
 		retorno = ""
 		
-		posicoes(1) = Boleto.Completa(Carteira, 3)
-		posicoes(2) = Left(Boleto.NossoNumero, 8)
-		posicoes(3) = Boleto.Completa(Boleto.NumeroDocumento, 7)
-		posicoes(4) = Boleto.Completa(i_codigoCliente, 5)
+		posicoes(1) = Boleto.Completa(Agencia, 4)
+		posicoes(2) = Boleto.Completa(Conta, 7)
 		
-		For i = 1 To 4
+		For i = 1 To 2
+			retorno = retorno & posicoes(i)
+		Next
+		
+		CalculaContaDV = Boleto.Mod11(retorno, "")
+	End Function
+	
+	
+	Public Function CalculaNossoNumeroDV()
+		Dim retorno, posicoes(3), i
+		retorno = ""
+		
+		posicoes(1) = Boleto.Completa(Boleto.NossoNumero, 15)
+		posicoes(2) = Boleto.Completa(Agencia, 4)
+		posicoes(3) = Boleto.Completa(Conta, 7)
+		
+		For i = 1 To 3
 			retorno = retorno & posicoes(i)
 		Next
 		
@@ -154,12 +155,10 @@ Class BancoItau15P 'implements IBancoASP
 			posicoes(10)	= Boleto.Completa(CLng(Boleto.ValorDocumento * 100), 10)
 		End If
 		
-		posicoes(20) 	= Boleto.Completa(Carteira, 3)
-		posicoes(23) 	= Left(Boleto.NossoNumero, 8)
-		posicoes(31) 	= Boleto.Completa(Boleto.NumeroDocumento, 7)
-		posicoes(38) 	= Boleto.Completa(i_codigoCliente, 5)
-		posicoes(43) 	= Boleto.NossoNumeroDV
-		posicoes(44)	= "0"
+		posicoes(20) 	= Boleto.Completa(Agencia, 4)
+		posicoes(24) 	= Boleto.Completa(Conta, 7)
+		posicoes(31) 	= Boleto.NossoNumeroDV
+		posicoes(32) 	= Boleto.Completa(Boleto.NossoNumero, 13)
 		
 		For i = 1 To 44
 			retorno = retorno & posicoes(i)
@@ -172,38 +171,36 @@ Class BancoItau15P 'implements IBancoASP
 	
 	
 	Public Function LinhaDigitavel()
-		Dim retorno, i, posicoes(16), numero
+		Dim retorno, i, posicoes(14), numero
 		
 		retorno = ""
 		numero = NumCodigoBarras()
 		
 		posicoes(1)		= Left(numero, 3) 				' Número do banco
 		posicoes(2)		= Boleto.Moeda					' Moeda
-		posicoes(3)		= Mid(numero, 20, 3)			' Carteira
-		posicoes(4)		= Mid(numero, 23, 2)			' 2 primeiros dígitos do nosso número
+		posicoes(3)		= Mid(numero, 20, 4)			' Agência
+		posicoes(4)		= Mid(numero, 24, 1)			' 1 primeiro dígito da conta
 		posicoes(5)		= "" 							' DV do primeiro grupo
 		
-		posicoes(6)		= Mid(numero, 25, 6)			' Restante do nosso número
-		posicoes(7)		= Mid(numero, 31, 4)			' 4 primeiros dígitos do número do documento
-		posicoes(8)		= "" 							' DV do segundo grupo
+		posicoes(6)		= Mid(numero, 25, 6)			' Restante da conta corrente
+		posicoes(7)		= Boleto.NossoNumeroDV			' Dígito do nosso número
+		posicoes(8)		= Mid(numero, 32, 3)			' 3 Primeiros digitos do nosso numero
+		posicoes(9)		= "" 							' DV do segundo grupo
 		
-		posicoes(9)		= Mid(numero, 35, 3) 			' Restante do número do documento
-		posicoes(10)	= Mid(numero, 38, 5) 			' Código do cliente
-		posicoes(11)	= Boleto.NossoNumeroDV			' DV do nosso número (Carteira/Nosso Número (sem o DAC) / Seu Número (sem o DAC) / Código do Cliente)
-		posicoes(12)	= "0" 							
-		posicoes(13)	= "" 							' DV do terceiro grupo
+		posicoes(10)	= Mid(numero, 35, 11) 			' Restante do nosso numero
+		posicoes(11)	= "" 							' DV do terceiro grupo
 		
-		posicoes(14)	= Mid(numero, 5, 1) 			' DV do código de barras
+		posicoes(12)	= Mid(numero, 5, 1) 			' DV do código de barras
 		
-		posicoes(15)	= Mid(numero, 6, 4) 			' Fator de vencimento
-		posicoes(16)	= Mid(numero, 10, 10) 			' Valor do documento
+		posicoes(13)	= Mid(numero, 6, 4) 			' Fator de vencimento
+		posicoes(14)	= Mid(numero, 10, 10) 			' Valor do documento
 		
 		' Calculando DVs
 		posicoes(5) 	= Boleto.Mod10(posicoes(1) & posicoes(2) & posicoes(3) & posicoes(4))
-		posicoes(8) 	= Boleto.Mod10(posicoes(6) & posicoes(7))
-		posicoes(13) 	= Boleto.Mod10(posicoes(9) & posicoes(10) & posicoes(11) & posicoes(12))
+		posicoes(9) 	= Boleto.Mod10(posicoes(6) & posicoes(7) & posicoes(8))
+		posicoes(11) 	= Boleto.Mod10(posicoes(10))
 		
-		For i = 1 To 16
+		For i = 1 To 14
 			retorno = retorno & posicoes(i)
 		Next
 
