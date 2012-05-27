@@ -144,7 +144,7 @@ Set boleto = Session("BoletoASP")
 	</tr>
 	<tr>
 		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= boleto.CedenteNome %></td>
-		<td class="BoletoValorDireito"><%= boleto.Banco.Agencia %>/<%= boleto.Banco.Conta %>-<%= boleto.Banco.ContaDV %></td>
+		<td class="BoletoValorDireito"><%= boleto.Banco.Agencia %>/<%= boleto.Banco.Conta %><% If boleto.Banco.ContaDV <> "" Then %>-<%= boleto.Banco.ContaDV %><% End If %></td>
 	</tr>
 	<tr>
 		<td colspan="3" class="BoletoTituloEsquerdo">Data do Documento</td>
@@ -179,7 +179,7 @@ Set boleto = Session("BoletoASP")
 		<td class="BoletoValorDireito"><%= boleto.ValorDocumento %></td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoTituloEsquerdo">Instruções</td>
+		<td colspan="10" class="BoletoTituloEsquerdo">Instruções (termo de responsabilidade do cedente)</td>
 		<td class="BoletoTituloDireito">(-) Desconto</td>
 	</tr>
 	<tr>
@@ -253,7 +253,7 @@ Set boleto = Session("BoletoASP")
 	</tr>
 	<tr>
 		<td colspan="10" class="BoletoValorEsquerdo" style="text-align: left; padding-left : 0.1cm"><%= boleto.CedenteNome %></td>
-		<td class="BoletoValorDireito"><%= boleto.Banco.Agencia %>/<%= boleto.Banco.Conta %>-<%= boleto.Banco.ContaDV %></td>
+		<td class="BoletoValorDireito"><%= boleto.Banco.Agencia %>/<%= boleto.Banco.Conta %><% If boleto.Banco.ContaDV <> "" Then %>-<%= boleto.Banco.ContaDV %><% End If %></td>
 	</tr>
 	<tr>
 		<td colspan="3" class="BoletoTituloEsquerdo">Data do Documento</td>
@@ -288,7 +288,7 @@ Set boleto = Session("BoletoASP")
 		<td class="BoletoValorDireito"><%= formatNumber(boleto.ValorDocumento, 2) %></td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoTituloEsquerdo">Instruções</td>
+		<td colspan="10" class="BoletoTituloEsquerdo">Instruções (termo de responsabilidade do cedente)</td>
 		<td class="BoletoTituloDireito">(-) Desconto</td>
 	</tr>
 	<tr>

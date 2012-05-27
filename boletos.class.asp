@@ -199,6 +199,16 @@ Class BoletoASP
 	End Property
 	
 	
+	Public Property Get ValorMulta()
+		ValorMulta = i_valorDocumento * i_percMulta / 100
+	End Property
+	
+	
+	Public Property Get ValorJuros()
+		ValorJuros = i_valorDocumento * i_percJuros / 100
+	End Property
+	
+	
 	' ## Construtor ##
 	Private Sub Class_Initialize()
 		i_pastaImagens = "imagens"
@@ -240,9 +250,18 @@ Class BoletoASP
 	' Cálculo de DV Mode 10
 	Public Function Mod10(ByVal strNumero)
 		Dim DV, tamanho, i, j, k
-		Dim num, soma, somaTotal
+		Dim num, soma, somaTotal, regex
 		
 		strNumero = CStr(strNumero)
+		
+		Set regex = New RegExp
+		regex.Pattern = "\D"
+		regex.Global = True
+		
+		strNumero = regex.Replace(strNumero, "")
+		
+		Set regex = Nothing
+		
 		tamanho = Len(strNumero)
 		k = 0
 		
@@ -274,9 +293,19 @@ Class BoletoASP
 	' Cálculo de DV Mode 11
 	Public Function Mod11(Byval strNumero, ByVal tipo)
 		Dim DV, tamanho, i, fator
-		Dim num, soma
+		Dim num, soma, regex
 		
-		strNumero = strNumero
+		strNumero = CStr(strNumero)
+		
+		Set regex = New RegExp
+		regex.Pattern = "\D"
+		regex.Global = True
+		
+		strNumero = regex.Replace(strNumero, "")
+		
+		Set regex = Nothing
+
+		
 		tamanho = Len(strNumero)
 		soma = 0
 		fator = 2
