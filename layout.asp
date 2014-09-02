@@ -1,104 +1,139 @@
 <%
+' ####################################################################################
+'
+' Gerador de Boletos em ASP por RCDMK <rcdmk@hotmail.com>
+' Início em 29/04/2012
+'
+' Define um layout padrão para geração de boleto em HTML
+' Deve ser utilizado como modelo para criação de outros layouts mais específicos
+'
+' ## Lisença #########################################################################
+'
+' The MIT License (MIT)  - http://opensource.org/licenses/MIT
+' 
+' Copyright (c) 2012 Ricardo Souza (RCDMK) - rcdmk@hotmail.com
+' 
+' Permission is hereby granted, free of charge, to any person obtaining a copy
+' of this software and associated documentation files (the "Software"), to deal
+' in the Software without restriction, including without limitation the rights
+' to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+' copies of the Software, and to permit persons to whom the Software is
+' furnished to do so, subject to the following conditions:
+' 
+' The above copyright notice and this permission notice shall be included in
+' all copies or substantial portions of the Software.
+' 
+' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+' IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+' FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+' AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+' LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+' THE SOFTWARE.
+'
+' ####################################################################################
+'
+' Recebe o objeto boleto da sessão (preenchida ao chamar o método HTML() do boleto)
 Dim boleto
 Set boleto = Session("BoletoASP")
 %>
 <style type="text/css">
-.Boleto td.BoletoCodigoBanco {
-	font-size: 24px;
-	font-family: arial, verdana;
-	font-weight : bold;
-	font-style: italic;
-	text-align: center;
-	vertical-align: bottom;
-	border-bottom: 1px solid #000000;
-	border-right: 1px solid #000000;
-	padding-bottom : 4px
-}
-.Boleto td.BoletoLogo {
-	border-bottom: 1px solid #000000;
-	border-right: 1px solid #000000;
-	text-align: center;
-	height: 10mm
-}
-.Boleto td.BoletoLinhaDigitavel {
-	font-size: 15px;
-	font-family: arial, verdana;
-	font-weight : bold;
-	text-align: center;
-	vertical-align: bottom;
-	border-bottom: 1px solid #000000;
-	padding-bottom : 4px;
-}
-.Boleto td.BoletoTituloEsquerdo {
-	font-size: 9px;
-	font-family: arial, verdana;
-	padding-left : 1px;
-	border-right: 1px solid #000000;
-	text-align: left
-}
-.Boleto td.BoletoTituloDireito {
-	font-size: 9px;
-	font-family: arial, verdana;
-	padding-left : 1px;
-	text-align: left
-}
-.Boleto td.BoletoValorEsquerdo {
-	font-size: 10px;
-	font-family: arial, verdana;
-	text-align: center;
-	border-right: 1px solid #000000;
-	font-weight: bold;
-	border-bottom: 1px solid #000000;
-	padding-top: 2px
-}
-.Boleto td.BoletoValorDireito {
-	font-size: 10px;
-	font-family: arial, verdana;
-	text-align:right;
-	padding-right: 9px;
-	padding-top: 2px;
-	border-bottom: 1px solid #000000;
-	font-weight: bold;
-}
-.Boleto td.BoletoTituloSacado {
-	font-size: 8px;
-	font-family: arial, verdana;
-	padding-left : 1px;
-	vertical-align: top;
-	padding-top : 1px;
-	text-align: left
-}
-.Boleto td.BoletoValorSacado {
-	font-size: 9px;
-	font-family: arial, verdana;
-	font-weight: bold;
-	text-align : left
-}
-.Boleto td.BoletoTituloSacador {
-	font-size: 8px;
-	font-family: arial, verdana;
-	padding-left : 1px;
-	vertical-align: bottom;
-	padding-bottom : 2px;
-	border-bottom: 1px solid #000000
-}
-.Boleto td.BoletoValorSacador {
-	font-size: 9px;
-	font-family: arial, verdana;
-	vertical-align: bottom;
-	padding-bottom : 1px;
-	border-bottom: 1px solid #000000;
-	font-weight: bold;
-	text-align: left
-}
-.Boleto td.BoletoPontilhado {
-	border-top: 1px dashed #000000;
-	font-size: 4px
-}
-.Boleto ul.BoletoInstrucoes {
-	font-size : 9px;
-	font-family : verdana, arial
-}
+	.Boleto td.BoletoCodigoBanco {
+		font-size: 24px;
+		font-family: arial, verdana;
+		font-weight : bold;
+		font-style: italic;
+		text-align: center;
+		vertical-align: bottom;
+		border-bottom: 1px solid #000000;
+		border-right: 1px solid #000000;
+		padding-bottom : 4px
+	}
+	.Boleto td.BoletoLogo {
+		border-bottom: 1px solid #000000;
+		border-right: 1px solid #000000;
+		text-align: center;
+		height: 10mm
+	}
+	.Boleto td.BoletoLinhaDigitavel {
+		font-size: 15px;
+		font-family: arial, verdana;
+		font-weight : bold;
+		text-align: center;
+		vertical-align: bottom;
+		border-bottom: 1px solid #000000;
+		padding-bottom : 4px;
+	}
+	.Boleto td.BoletoTituloEsquerdo {
+		font-size: 9px;
+		font-family: arial, verdana;
+		padding-left : 1px;
+		border-right: 1px solid #000000;
+		text-align: left
+	}
+	.Boleto td.BoletoTituloDireito {
+		font-size: 9px;
+		font-family: arial, verdana;
+		padding-left : 1px;
+		text-align: left
+	}
+	.Boleto td.BoletoValorEsquerdo {
+		font-size: 10px;
+		font-family: arial, verdana;
+		text-align: center;
+		border-right: 1px solid #000000;
+		font-weight: bold;
+		border-bottom: 1px solid #000000;
+		padding-top: 2px
+	}
+	.Boleto td.BoletoValorDireito {
+		font-size: 10px;
+		font-family: arial, verdana;
+		text-align:right;
+		padding-right: 9px;
+		padding-top: 2px;
+		border-bottom: 1px solid #000000;
+		font-weight: bold;
+	}
+	.Boleto td.BoletoTituloSacado {
+		font-size: 8px;
+		font-family: arial, verdana;
+		padding-left : 1px;
+		vertical-align: top;
+		padding-top : 1px;
+		text-align: left
+	}
+	.Boleto td.BoletoValorSacado {
+		font-size: 9px;
+		font-family: arial, verdana;
+		font-weight: bold;
+		text-align : left
+	}
+	.Boleto td.BoletoTituloSacador {
+		font-size: 8px;
+		font-family: arial, verdana;
+		padding-left : 1px;
+		vertical-align: bottom;
+		padding-bottom : 2px;
+		border-bottom: 1px solid #000000
+	}
+	.Boleto td.BoletoValorSacador {
+		font-size: 9px;
+		font-family: arial, verdana;
+		vertical-align: bottom;
+		padding-bottom : 1px;
+		border-bottom: 1px solid #000000;
+		font-weight: bold;
+		text-align: left
+	}
+	.Boleto td.BoletoPontilhado {
+		border-top: 1px dashed #000000;
+		font-size: 4px
+	}
+	.Boleto ul.BoletoInstrucoes {
+		font-size : 9px;
+		font-family : verdana, arial
+	}
 </style>
 <table cellspacing="0" cellpadding="0" border="0" class="Boleto">
 	<tr>
@@ -115,12 +150,14 @@ Set boleto = Session("BoletoASP")
 		<td style="width: 3.8cm"></td>
 	</tr>
 	<tr>
-		<td colspan="11"><ul class="BoletoInstrucoes">
+		<td colspan="11">
+			<ul class="BoletoInstrucoes">
 				<li>Imprima em papel A4 ou Carta</li>
 				<li>Utilize margens mínimas a direita e a esquerda</li>
 				<li>Recorte na linha pontilhada</li>
 				<li>Não rasure o código de barras</li>
-			</ul></td>
+			</ul>
+		</td>
 	</tr>
 	<tr>
 		<td colspan="11" class="BoletoPontilhado">&nbsp;</td>
@@ -346,4 +383,6 @@ Set boleto = Session("BoletoASP")
 		<td colspan="11" class="BoletoPontilhado">&nbsp;</td>
 	</tr>
 </table>
-<% Set boleto = Nothing %>
+<%
+Set boleto = Nothing
+%>

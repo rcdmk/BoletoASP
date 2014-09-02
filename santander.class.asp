@@ -1,9 +1,40 @@
 <%
+' ####################################################################################
+'
+' Gerador de Boletos em ASP por RCDMK <rcdmk@hotmail.com>
+' Início em 29/04/2012
 '
 ' Esta classe representa os padrões de boleto para o banco Santander com as
 ' carteiras padrão
 '
-' ## Modelo para Banco Santander ##
+' ## Lisença #########################################################################
+'
+' The MIT License (MIT)  - http://opensource.org/licenses/MIT
+' 
+' Copyright (c) 2012 Ricardo Souza (RCDMK) - rcdmk@hotmail.com
+' 
+' Permission is hereby granted, free of charge, to any person obtaining a copy
+' of this software and associated documentation files (the "Software"), to deal
+' in the Software without restriction, including without limitation the rights
+' to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+' copies of the Software, and to permit persons to whom the Software is
+' furnished to do so, subject to the following conditions:
+' 
+' The above copyright notice and this permission notice shall be included in
+' all copies or substantial portions of the Software.
+' 
+' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+' IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+' FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+' AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+' LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+' THE SOFTWARE.
+'
+' ####################################################################################
+'
+' ## Modelo para Banco Santander #####################################################
+' Depende de: IBancoASP (já incluso no banco base, que é utilizado no boleto)
 Class BancoSantander 'implements IBancoASP
 	' ## Campos ##
 	Dim i_pai, i_boleto
@@ -65,7 +96,7 @@ Class BancoSantander 'implements IBancoASP
 	
 	Public Property Let Conta(val)
 		i_conta = val
-		i_contaDV = CalculaContaDV
+		i_contaDV = "" ' não possui DV
 	End Property
 	
 	
@@ -96,7 +127,7 @@ Class BancoSantander 'implements IBancoASP
 		i_carteira = "101"
 		i_agencia = "00000-0"
 		i_conta = "00000"
-		i_contaDV = 0
+		i_contaDV = "" ' não possui DV na conta
 		i_localPagamento = "Pagar preferencialmente no Grupo Santander - GC"
 	End Sub
 	
@@ -107,11 +138,6 @@ Class BancoSantander 'implements IBancoASP
 	
 	
 	' ## Métodos ##
-	Private Function CalculaContaDV()
-		CalculaContaDV = ""
-	End Function
-	
-	
 	Public Function CalculaNossoNumeroDV()
 		Dim retorno
 

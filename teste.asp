@@ -3,7 +3,7 @@ Option Explicit
 
 ' Importando as classes necessárias
 %>
-<!--#include file="boletos.class.asp" -->
+<!--#include file="boleto.class.asp" -->
 <!--#include file="santander.class.asp" -->
 <%
 
