@@ -113,19 +113,11 @@ Class BancoSantander 'implements IBancoASP
 	
 	
 	Public Function CalculaNossoNumeroDV()
-		Dim retorno, posicoes(4), i
-		retorno = ""
-		
-		posicoes(1) = Boleto.Completa(Carteira, 3)
-		posicoes(2) = Left(Boleto.NossoNumero, 8)
-		posicoes(3) = Boleto.Completa(Boleto.NumeroDocumento, 7)
-		posicoes(4) = Boleto.Completa(Conta, 5)
-		
-		For i = 1 To 4
-			retorno = retorno & posicoes(i)
-		Next
-		
-		CalculaNossoNumeroDV = Boleto.Mod10(retorno)
+		Dim retorno
+
+		retorno = Boleto.Completa(Boleto.NossoNumero, 12)		
+	
+		CalculaNossoNumeroDV = Boleto.Mod11(retorno, MOD11_BRADESCO)
 	End Function
 	
 	
