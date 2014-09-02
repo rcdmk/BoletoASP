@@ -176,7 +176,7 @@ Set boleto = Session("BoletoASP")
 		<td colspan="2" class="BoletoValorEsquerdo">R$</td>
 		<td colspan="2" class="BoletoValorEsquerdo">&nbsp;</td>
 		<td class="BoletoValorEsquerdo">&nbsp;</td>
-		<td class="BoletoValorDireito"><%= boleto.ValorDocumento %></td>
+		<td class="BoletoValorDireito"><%= formatNumber(boleto.ValorDocumento, 2) %></td>
 	</tr>
 	<tr>
 		<td colspan="10" class="BoletoTituloEsquerdo">Instruções (termo de responsabilidade do cedente)</td>
@@ -324,13 +324,13 @@ Set boleto = Session("BoletoASP")
 	<tr>
 		<td rowspan="3" class="BoletoTituloSacado">Sacado:</td>
 		<td colspan="8" class="BoletoValorSacado"><%= boleto.Sacado.Nome %>&nbsp;</td>
-		<td colspan="2" class="BoletoValorSacado"><%= boleto.Sacado.CPF %>&nbsp;</td>
+		<td colspan="2" class="BoletoValorSacado">CPF/CNPJ: <%= boleto.Sacado.CPF %>&nbsp;</td>
 	</tr>
 	<tr>
 		<td colspan="10" class="BoletoValorSacado"><%= boleto.Sacado.Endereco %> - <%= boleto.Sacado.Bairro %></td>
 	</tr>
 	<tr>
-		<td colspan="10" class="BoletoValorSacado"><%= boleto.Sacado.Cidade %> - <%= boleto.Sacado.Estado %>&nbsp;&nbsp;&nbsp;<%= boleto.Sacado.CEP %></td>
+		<td colspan="10" class="BoletoValorSacado"><%= boleto.Sacado.Cidade %> - <%= boleto.Sacado.Estado %> - CEP <%= boleto.Sacado.CEP %></td>
 	</tr>
 	<tr>
 		<td colspan="2" class="BoletoTituloSacador">Sacador / Avalista:</td>
