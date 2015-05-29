@@ -1,4 +1,4 @@
-# Gerador de Boletos HTML em ASP por RCDMK <rcdmk@hotmail.com>
+# Gerador de Boletos HTML em ASP por RCDMK <rcdmk[at]hotmail[dot]com>
 
 Esta "biblioteca" pretente auxiliar no desenvolvimento e implantação de cobrança
 via boletos.
@@ -54,7 +54,7 @@ na página ou `Boleto.HTML()` para obter o HTML do boleto.
 
 ### The MIT License (MIT)  - http://opensource.org/licenses/MIT
 
-Copyright (c) 2012 **Ricardo Souza (RCDMK) - rcdmk@hotmail.com**
+Copyright (c) 2015 **RCDMK - rcdmk[at]hotmail[dot]com**
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

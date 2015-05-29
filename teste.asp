@@ -3,8 +3,8 @@ Option Explicit
 
 ' Importando as classes necessárias
 %>
-<!--#include file="boleto.class.asp" -->
-<!--#include file="santander.class.asp" -->
+<!--#include file="src/boleto.class.asp" -->
+<!--#include file="src/santander.class.asp" -->
 <%
 
 Dim boleto, banco, sacado

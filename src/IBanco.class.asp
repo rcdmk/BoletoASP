@@ -1,10 +1,10 @@
 <%
 ' ####################################################################################
 '
-' Gerador de Boletos em ASP por RCDMK <rcdmk@hotmail.com>
+' Gerador de Boletos em ASP por RCDMK <rcdmk[at]hotmail[dot]com>
 ' Início em 29/04/2012
 '
-' Implementação básica de um banco. Esta classe serve como modelo para implementação
+' Interface básica de um banco. Esta classe serve como modelo para implementação
 ' de bancos, que tem cálculos específicos para dígitos e dados extras para os campos
 ' livres do boleto
 '
@@ -12,7 +12,7 @@
 '
 ' The MIT License (MIT)  - http://opensource.org/licenses/MIT
 ' 
-' Copyright (c) 2012 Ricardo Souza (RCDMK) - rcdmk@hotmail.com
+' Copyright (c) 2015 RCDMK - rcdmk[at]hotmail[dot]com
 ' 
 ' Permission is hereby granted, free of charge, to any person obtaining a copy
 ' of this software and associated documentation files (the "Software"), to deal
